@@ -235,6 +235,28 @@ function Set-HighPerformance {
     powercfg -setactive SCHEME_MIN
 }
 
+function Set-RestorePoint {
+  $RestorePointName = "Before Windows Optimization"
+  # Constants for restore point types
+  $RESTORE_POINT_TYPE_SYSTEM = 12  # Full system restore point
+
+  # Create the restore point
+  $comObject = Get-CimInstance -Namespace "root/default" -ClassName "SystemRestore"
+
+  try {
+      $result = $comObject.CreateRestorePoint($RestorePointName, $RESTORE_POINT_TYPE_SYSTEM, 100)
+      if ($result -eq 0) {
+          Write-Host "Restore point '$RestorePointName' created successfully."
+      } 
+      else {
+          Write-Warning "Failed to create restore point. Error code: $result"
+      }
+  } 
+  catch {
+      Write-Error "An error occurred: $_"
+  }
+}
+
 # Main
 
 # Check if running as Administrator
@@ -260,7 +282,11 @@ $processes = @(
   @{
     Name = "Reading IP Adresses"
     Script = "Get-NetIPAddress"
-  },  
+  },
+  @{
+    Name = "Creating a Restore Point"
+    Script = "Set-RestorePoint"
+  }  
   @{
     Name = "Debloating Windows"
     Script = "Start-Debloat"
@@ -276,14 +302,6 @@ $processes = @(
   @{
     Name = "Setting the Power Performance to High Performance"
     Script = "Set-HighPerformance"
-  },
-  @{
-    Name = "Windows Quality Updates"
-    Script = "https://raw.githubusercontent.com/FlorianSLZ/OSDCloud-Stuff/main/OOBE/Windows-Updates_Quality.ps1"
-  },
-  @{
-    Name = "Windows Firmware and Driver Updates"
-    Script = "https://raw.githubusercontent.com/FlorianSLZ/OSDCloud-Stuff/main/OOBE/Windows-Updates_DriverFirmware.ps1"
   }
 )
 
