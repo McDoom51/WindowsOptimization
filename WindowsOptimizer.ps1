@@ -258,6 +258,10 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 $processes = @(
   @{
+    Name = "Reading IP Adresses"
+    Script = "Get-NetIPAddress"
+  },  
+  @{
     Name = "Debloating Windows"
     Script = "Start-Debloat"
   },
