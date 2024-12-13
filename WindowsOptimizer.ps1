@@ -90,17 +90,6 @@ public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
 public static extern bool SetForegroundWindow(IntPtr hWnd);
 '
 
-    function Show-Console {
-        $consolePtr = [Console.Window]::GetConsoleWindow()
-        [Console.Window]::ShowWindow($consolePtr, 5)
-        [Console.Window]::SetForegroundWindow($consolePtr) # Bring the window to the front
-    }
-
-    function Hide-Console {
-        $consolePtr = [Console.Window]::GetConsoleWindow()
-        [Console.Window]::ShowWindow($consolePtr, 0)
-    }
-
     # Show the window
     #Hide-Console
     $Window.Show() | Out-Null
@@ -150,6 +139,17 @@ public static extern bool SetForegroundWindow(IntPtr hWnd);
     $Window.Close()
 
     Show-Console
+}
+
+function Show-Console {
+  $consolePtr = [Console.Window]::GetConsoleWindow()
+  [Console.Window]::ShowWindow($consolePtr, 5)
+  [Console.Window]::SetForegroundWindow($consolePtr) # Bring the window to the front
+}
+
+function Hide-Console {
+  $consolePtr = [Console.Window]::GetConsoleWindow()
+  [Console.Window]::ShowWindow($consolePtr, 0)
 }
 
 function Start-Debloat {
